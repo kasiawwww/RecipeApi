@@ -6,19 +6,16 @@ using System.Threading.Tasks;
 
 namespace RecipeApi.Models
 {
-    public class Recipe
+    public class Category
     {
+        public Category()
+        {
+            Recipes = new HashSet<Recipe>();
+        }
         public int ID { get; set; }
         [MaxLength(100)]
         [Required]
         public string Name { get; set; }
-        //[MaxLength(100)]      
-        //public string Category { get; set; }
-        public string Image { get; set; }
-        [Required(ErrorMessage ="Body jest wymagane")]
-        public string Body { get; set; }
-        public virtual Category Category { get; set; }
-
-
+        public virtual ICollection<Recipe> Recipes { get; set; }
     }
 }

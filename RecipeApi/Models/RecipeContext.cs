@@ -12,5 +12,6 @@ namespace RecipeApi.Models
         {
         }
         public DbSet<Recipe> Recipes {get; set;}
+        public DbSet<Category> Categories { get; set; }
     }
 }

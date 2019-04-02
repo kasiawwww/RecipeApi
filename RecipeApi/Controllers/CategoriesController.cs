@@ -1,30 +1,30 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using RecipeApi.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using RecipeApi.Models;
 
 namespace RecipeApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class RecipesController: ControllerBase
+    public class CategoriesController : ControllerBase
     {
         private readonly RecipeContext db;
 
-        public RecipesController(RecipeContext db)
+        public CategoriesController(RecipeContext db)
         {
             this.db = db;
         }
         [HttpGet]
-        public IActionResult GetRecipes()
+        public IActionResult GetCategories()
         {
             try
             {
-               // throw new Exception("ohhohoh");
-                return Ok(db.Recipes.Include(a=>a.Category).ToList());
+                // throw new Exception("ohhohoh");
+                return Ok(db.Categories.ToList());
             }
             catch (Exception ex)
             {
@@ -33,16 +33,16 @@ namespace RecipeApi.Controllers
             //return Ok(new List<Recipe>());
         }
         [HttpGet("{id}")]
-        public IActionResult GetRecipes(int id) //[FromQuery] int id
+        public IActionResult GetCategories(int id) //[FromQuery] int id
         {
             try
             {
-                var recipe = db.Recipes.SingleOrDefault(a => a.ID == id);
-                if (recipe == null)
+                var category = db.Categories.SingleOrDefault(a => a.ID == id);
+                if (category == null)
                 {
                     return NotFound("Nie znaleziono");
                 }
-                return Ok(recipe);               
+                return Ok(category);
             }
             catch (Exception ex)
             {
@@ -56,16 +56,16 @@ namespace RecipeApi.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddRecipes(Recipe recipe)// [FromBody] Recipe recipe
+        public IActionResult AddCategories(Category category)// [FromBody] Recipe recipe
         {
             try
             {
                 if (ModelState.IsValid)
                 {
                     //TODO dodać walidację
-                    db.Recipes.Add(recipe);
+                    db.Categories.Add(category);
                     db.SaveChanges();
-                    return CreatedAtAction(nameof(GetRecipes), new { id = recipe.ID }, recipe); //zwraca 201
+                    return CreatedAtAction(nameof(GetCategories), new { id = category.ID }, category); //zwraca 201
                 }
                 return BadRequest("Błedne dane wejsciowe");
 
@@ -74,28 +74,28 @@ namespace RecipeApi.Controllers
             {
                 return BadRequest(ex);
             }
-            //return CreatedAtAction(nameof(GetRecipes), new { id = recipe.ID }, recipe); //zwraca 201
+            //return CreatedAtAction(nameof(GetCategories), new { id = recipe.ID }, recipe); //zwraca 201
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateRecipes(int id, Recipe recipe)
+        public IActionResult UpdateCategories(int id, Category category)
         {
             try
             {
-                if (id <0)
+                if (id < 0)
                 {
                     return BadRequest("id nie moze być mniejsze od 0");
                 }
-                var recipeToUpdate = db.Recipes.Find(id);
-                if (recipeToUpdate == null)
+                var categoryToUpdate = db.Categories.Find(id);
+                if (categoryToUpdate == null)
                 {
                     return NotFound("Nie znaleziono");
                 }
-                recipeToUpdate = recipe;
-                db.Update(recipeToUpdate);
+                categoryToUpdate = category;
+                db.Update(categoryToUpdate);
                 db.SaveChanges();
                 return NoContent();
-                
+
             }
             catch (Exception ex)
             {
@@ -109,19 +109,19 @@ namespace RecipeApi.Controllers
         }
 
         [HttpDelete("{id}")]
-        public ActionResult<Recipe> DeleteRecipes(int id)
+        public ActionResult<Category> DeleteCategories(int id)
         {
             try
             {
-                var recipeToDelete = db.Recipes.Find(id);
-                if (recipeToDelete == null)
+                var categoryToDelete = db.Categories.Find(id);
+                if (categoryToDelete == null)
                 {
                     return NotFound("Nie znaleziono");
                 }
-                db.Recipes.Remove(recipeToDelete);
+                db.Categories.Remove(categoryToDelete);
                 db.SaveChanges();
-                return Ok(recipeToDelete);
-                
+                return Ok(categoryToDelete);
+
             }
             catch (Exception ex)
             {
