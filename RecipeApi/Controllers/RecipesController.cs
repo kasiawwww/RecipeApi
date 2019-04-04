@@ -60,7 +60,7 @@ namespace RecipeApi.Controllers
         {
             try
             {
-                if (ModelState.IsValid)
+                if (ModelState.IsValid && CategoryExists(recipe.CategoryId))
                 {
                     //TODO dodać walidację
                     db.Recipes.Add(recipe);
@@ -82,20 +82,24 @@ namespace RecipeApi.Controllers
         {
             try
             {
-                if (id <0)
+                if (ModelState.IsValid && CategoryExists(recipe.CategoryId))
                 {
-                    return BadRequest("id nie moze być mniejsze od 0");
+                    if (id < 0)
+                    {
+                        return BadRequest("id nie moze być mniejsze od 0");
+                    }
+                    var recipeToUpdate = db.Recipes.Find(id);
+                    if (recipeToUpdate == null)
+                    {
+                        return NotFound("Nie znaleziono");
+                    }
+                    recipeToUpdate = recipe;
+                    db.Update(recipeToUpdate);
+                    db.SaveChanges();
+                    return NoContent();
                 }
-                var recipeToUpdate = db.Recipes.Find(id);
-                if (recipeToUpdate == null)
-                {
-                    return NotFound("Nie znaleziono");
-                }
-                recipeToUpdate = recipe;
-                db.Update(recipeToUpdate);
-                db.SaveChanges();
-                return NoContent();
-                
+
+                return BadRequest("Błędne dane wejściowe");
             }
             catch (Exception ex)
             {
@@ -127,6 +131,13 @@ namespace RecipeApi.Controllers
             {
                 return BadRequest(ex);
             }
+        }
+        private bool CategoryExists(int? id)
+        {
+            if (id == null)            
+                return true;
+            
+            return db.Categories.Any(a => a.ID == id);
         }
     }
 }
