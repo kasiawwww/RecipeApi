@@ -18,6 +18,7 @@ namespace RecipeApi.Models
         [Required(ErrorMessage ="Body jest wymagane")]
         public string Body { get; set; }
         public virtual Category Category { get; set; }
+        public int? CategoryId { get; set; }
 
 
     }

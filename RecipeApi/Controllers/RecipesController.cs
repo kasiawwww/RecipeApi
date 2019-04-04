@@ -37,7 +37,7 @@ namespace RecipeApi.Controllers
         {
             try
             {
-                var recipe = db.Recipes.SingleOrDefault(a => a.ID == id);
+                var recipe = db.Recipes.Include(a=>a.Category).SingleOrDefault(a => a.ID == id);
                 if (recipe == null)
                 {
                     return NotFound("Nie znaleziono");
