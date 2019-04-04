@@ -1,0 +1,56 @@
+@URL = http://localhost:48791
+###
+get {{URL}}/api/recipes
+###
+get {{URL}}/api/recipes/45
+###
+post {{URL}}/api/recipes/
+content-Type: application/json
+
+{
+  "id": 0,
+  "name": "kuyuyiu",
+  "categoryId": 1,
+  "image": null,
+  "body": "jfj"
+}
+
+###
+put {{URL}}/api/recipes/1
+content-Type: application/json
+
+{
+  "id": 2,
+  "name": "test",
+  "category": "testowa",
+  "image": null,
+  "body": "test"
+}
+
+###
+delete {{URL}}/api/recipes/5
+
+###
+get {{URL}}/api/categories
+###
+get {{URL}}/api/categories/45
+###
+post {{URL}}/api/categories/
+content-Type: application/json
+
+{
+  "id": 0,
+  "name": "obiady"
+}
+
+###
+put {{URL}}/api/categories/1
+content-Type: application/json
+
+{
+  "id": 2,
+  "name": "sniadania"
+}
+
+###
+delete {{URL}}/api/categories/1
