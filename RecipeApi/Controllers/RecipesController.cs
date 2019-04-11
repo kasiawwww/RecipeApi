@@ -11,6 +11,7 @@ namespace RecipeApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [KeyAuthorize(PolicyEnum.Admin)]
     public class RecipesController: ControllerBase
     {
         private readonly RecipeContext db;
@@ -20,7 +21,7 @@ namespace RecipeApi.Controllers
             this.db = db;
         }
         [HttpGet]
-        [KeyAuthorize(PolicyEnum.Reader)]
+        
         public IActionResult GetRecipes()
         {
             try
@@ -58,7 +59,7 @@ namespace RecipeApi.Controllers
         }
 
         [HttpPost]
-        [KeyAuthorize(PolicyEnum.User)]
+       // [KeyAuthorize(PolicyEnum.User)]
         public IActionResult AddRecipes(Recipe recipe)// [FromBody] Recipe recipe
         {
             try
@@ -116,7 +117,7 @@ namespace RecipeApi.Controllers
         }
 
         [HttpDelete("{id}")]
-        [KeyAuthorize(PolicyEnum.Admin | PolicyEnum.User) ]
+       // [KeyAuthorize(PolicyEnum.Admin | PolicyEnum.User) ]
         public ActionResult<Recipe> DeleteRecipes(int id)
         {
             try

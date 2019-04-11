@@ -4,12 +4,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using RecipeApi.Auth;
 using RecipeApi.Models;
 
 namespace RecipeApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [KeyAuthorize(PolicyEnum.Admin)]
     public class CategoriesController : ControllerBase
     {
         private readonly RecipeContext db;
