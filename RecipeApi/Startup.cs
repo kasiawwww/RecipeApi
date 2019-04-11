@@ -30,27 +30,28 @@ namespace RecipeApi
         {
             //services.AddDbContext<RecipeContext>(o => o.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
             services.AddDbContext<RecipeContext>(o => o.UseSqlite(StaticValues.ConnectionHelper));
-            services.AddTransient<IApiKeyRepo, ApiKeyRepo>();
-            services.AddTransient<IAuthorizationHandler, KeyHandler>();
             services.AddHttpContextAccessor();
 
-            services.AddAuthorization(options =>
-            {
-                options.AddPolicy(PolicyEnum.Admin.ToString(), policy =>
-                    policy.Requirements.Add(new KeyRequirements(PolicyEnum.Admin)));
-                options.AddPolicy(PolicyEnum.User.ToString(), policy =>
-                   policy.Requirements.Add(new KeyRequirements(PolicyEnum.User)));
-                options.AddPolicy(PolicyEnum.Reader.ToString(), policy =>
-                    policy.Requirements.Add(new KeyRequirements(PolicyEnum.Reader)));
-                options.AddPolicy(PolicyEnum.Lack.ToString(), policy =>
-                    policy.Requirements.Add(new KeyRequirements(PolicyEnum.Lack)));
-
-            });
-
             services.AddMvcCore()
+                .AddAuthorization(options =>
+                {
+                    options.AddPolicy(PolicyEnum.Admin.ToString(), policy =>
+                        policy.Requirements.Add(new KeyRequirements(PolicyEnum.Admin)));
+                    options.AddPolicy(PolicyEnum.User.ToString(), policy =>
+                       policy.Requirements.Add(new KeyRequirements(PolicyEnum.User)));
+                    options.AddPolicy(PolicyEnum.Reader.ToString(), policy =>
+                        policy.Requirements.Add(new KeyRequirements(PolicyEnum.Reader)));
+                    options.AddPolicy(PolicyEnum.Lack.ToString(), policy =>
+                        policy.Requirements.Add(new KeyRequirements(PolicyEnum.Lack)));
+
+                })
                 .AddDataAnnotations()
                 .AddJsonFormatters()
-                .AddJsonOptions(o => o.SerializerSettings.Formatting = Newtonsoft.Json.Formatting.Indented); // dodaj mvc
+                .AddJsonOptions(o => o.SerializerSettings.Formatting = Newtonsoft.Json.Formatting.Indented); // dodaj mvc    
+
+            services.AddTransient<IApiKeyRepo, ApiKeyRepo>();
+            services.AddTransient<IAuthorizationHandler, KeyHandler>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -65,13 +66,14 @@ namespace RecipeApi
                 app.UseHsts(); //wymuszanie ssl czyli połączenie certyfikowane; sprawdzanie czasu requesta, przerwanie połaczenia w razie zbyt długiego czasu
             }
 
+            addDefaultKey();
             app.UseMvc(); // dodaj mvc
 
             app.Run(async (context) =>
             {
                 await context.Response.WriteAsync("Nie znaleziono API.");
             });
-            addDefaultKey();
+
         }
 
         private void addDefaultKey()

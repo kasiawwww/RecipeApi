@@ -9,7 +9,7 @@ namespace RecipeApi.Auth
     {
         Admin = 1,
         User = 2,
-        Reader = 4,
+        Reader = 3,
         Lack = 1000
     }
 }
